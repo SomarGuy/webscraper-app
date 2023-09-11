@@ -1,3 +1,4 @@
+import Header from '@/components/Header'
 import Sidebar from '@/components/Sidebar'
 import '@/styles/globals.css'
 
@@ -18,7 +19,7 @@ export default function RootLayout({
         <Sidebar />
 
         <main className='p-10 max-w-7xl w-full mx-auto overflow-y-auto'>
-          {/* Header */}
+          <Header />
           {children}
           
         </main>
