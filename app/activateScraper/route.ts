@@ -1,5 +1,7 @@
-export async function GET(request: Request) {}
+import { NextApiRequest } from "next";
 
-export async function POST(request: Request) {}
 
-export async function DELETE(request: Request) {}
+export async function POST(req: Request) {
+    console.log("Submitting...", req.body)
+}
+
