@@ -2,8 +2,10 @@
 
 import Results from "@/components/Results";
 import { db } from "../../../firebase";
-import { doc } from "firebase/firestore";
+import { doc, deleteDoc } from "firebase/firestore";
 import { useDocument } from "react-firebase-hooks/firestore";
+import Spinner  from "react-spinkit";
+import { useRouter } from "next/navigation";
 
 type Props = {
     params: {
@@ -13,6 +15,21 @@ type Props = {
 
 function SearchPage({ params: { id }}: Props) {
     const [snapshot, loading, error] = useDocument(doc(db, 'searches', id));
+    const router= useRouter();
+
+    const handleDelete = () => {
+        deleteDoc(doc(db, "searches", id));
+        router.push("/")
+    };
+
+    const deleteButton = (
+        <button
+        className="bg-emerald-800 text-white px-4 py-2 rounded-lg"
+        onClick={handleDelete}
+        >
+            Delete Search
+        </button>
+    )
 
     if (loading) return (
         <h1 className="text-center p-10 animate-pulse text-xl text-emerald-800/50">
@@ -26,23 +43,37 @@ function SearchPage({ params: { id }}: Props) {
   return (
     <div className="flex flex-col gap-y-5 py-10 items-center justify-between">
         <p className="text-emerald-800 animate-pulse text-center">Scraping results from Amazon...</p>
+
+        <Spinner
+            style={{
+                height: "100px",
+                width: "100px",
+            }}
+            name="cube-grid"
+            fadeIn="none"
+            color="black"
+            />
+
+            {deleteButton}
     </div>
   );
 
   return (
-    <div>
+    <div className="py-5">
         <div className="flex items-center justify-between mb-7">
             <div className="flex flex-col md:flex-row gap-x-4">
-                <h1 className="font-bold">
-                    Search results for{" "}
-                    <span className="text-emerald-800">"{snapshot.data().search}"
-                    </span>
-                </h1>
+            <h1 className="font-bold">
+    Search results for{" "}
+    <span className="text-emerald-800">&quot;{snapshot.data().search}&quot;
+    </span>
+</h1>
+
                 <p className="text-gray-300">
                     {snapshot.data()?.results?.length > 0 &&
                     `${snapshot.data()?.results?.length} results found`}
                 </p>
             </div>
+            {deleteButton}
         </div>
 
         {
